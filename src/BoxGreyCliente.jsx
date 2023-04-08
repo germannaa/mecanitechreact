@@ -1,9 +1,11 @@
-import { Button } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import { Box } from "@mui/material";
 import { useContext } from "react";
+import { Edit, Delete } from "@mui/icons-material";
 import { ComponentesContext } from "./useContext";
 import FormNovoCliente from "./FormNovoCliente";
 import { useState, useEffect } from "react";
+
 import {
   Table,
   TableBody,
@@ -37,6 +39,41 @@ export function BoxGreyCliente() {
     setModalOpenCliente(true);
   };
 
+  const handleEdit = () => {};
+/*
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:3333/clientes/${id}`)
+      .then((response) => {
+        console.log(response.data);
+        // Atualiza a lista de clientes
+        setClientes(clientes.filter((cliente) => cliente.id !== id));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  
+  */
+
+
+  const handleDelete = (id) => {
+    if (window.confirm("Tem certeza que deseja excluir o cliente?")) {
+      axios
+        .delete(`http://localhost:3333/clientes/${id}`)
+        .then((response) => {
+          console.log(response.data);
+          // Atualiza a lista de clientes
+          setClientes(clientes.filter((cliente) => cliente.id !== id));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+  
+
+
   return (
     <Box
       sx={{
@@ -48,39 +85,22 @@ export function BoxGreyCliente() {
       }}
     >
       <Box
-        style={{
+        sx={{
           display: "flex",
-          flexDirection: "row",
+          justifyContent: "space-between",
           alignItems: "center",
-          alignContent: "center",
         }}
       >
         <Button
           variant="contained"
           color="warning"
           size="small"
-          sx={{ margin: "10px" }}
+          sx={{ margin: "10px", marginLeft: "auto" }}
           onClick={criarNovoCliente}
         >
           Novo Cliente
         </Button>
         <FormNovoCliente />
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          sx={{ margin: "10px" }}
-        >
-          Editar Cliente
-        </Button>
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          sx={{ margin: "10px" }}
-        >
-          Excluir Cliente
-        </Button>
       </Box>
 
       <div>
@@ -89,7 +109,8 @@ export function BoxGreyCliente() {
             <TableHead>
               <TableRow>
                 <TableCell width={40}>ID</TableCell>
-                <TableCell width={400}>Nome Cliente</TableCell>
+                <TableCell width={100}>Ações</TableCell>
+                <TableCell width={200}>Nome Cliente</TableCell>
                 <TableCell>Telefone</TableCell>
               </TableRow>
             </TableHead>
@@ -100,6 +121,22 @@ export function BoxGreyCliente() {
                 .map((cliente) => (
                   <TableRow key={cliente.id}>
                     <TableCell>{cliente.id}</TableCell>
+                    <TableCell>
+                      <IconButton
+                        aria-label="editar"
+                        size="small"
+                        onClick={() => handleEdit(cliente)}
+                      >
+                        <Edit />
+                      </IconButton>
+                      <IconButton
+                        aria-label="deletar"
+                        size="small"
+                        onClick={() => handleDelete(cliente.id)}
+                      >
+                        <Delete />
+                      </IconButton>
+                    </TableCell>
                     <TableCell>{cliente.nome}</TableCell>
                     <TableCell>{cliente.telefone}</TableCell>
                   </TableRow>
