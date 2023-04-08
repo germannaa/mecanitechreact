@@ -1,37 +1,95 @@
 import React, { useState } from "react";
 import { Modal, Box, Typography, TextField, Grid, Button } from "@mui/material";
-import axios from 'axios';
+import axios from "axios";
 import { useContext } from "react";
 import { ComponentesContext } from "./useContext";
+import { useEffect } from "react";
 
 const FormNovoCliente = () => {
-  const [nomeCliente, setNomeCliente] = useState("");
+  const [nome, setNomeCliente] = useState("");
   const [cpf, setCpf] = useState("");
+  const [senha, setSenha] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
-  const { modalOpenCliente, setModalOpenCliente } = useContext(ComponentesContext);
+  const {
+    modalOpenCliente,
+    clienteSelecionado,
+    clientes,
+    setModalOpenCliente,
+    setClienteSelecionado,
+    setClientes,
+  } = useContext(ComponentesContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("http://localhost:3333/clientes", {
-        nome: nomeCliente,
-        cpf: cpf,
-        email: email,
-        telefone: telefone,
-      })
-      .then((response) => {
-        console.log("Resposta do servidor:", response.data);
-      })
-      .catch((error) => {
-        console.error("Erro ao enviar requisição:", error);
-      });
+    if (clienteSelecionado) {
+      axios
+        .put(`http://localhost:3333/clientes/${clienteSelecionado.id}`, {
+          nome: nome,
+          cpf: cpf,
+          senha: "1234",
+          telefone: telefone,
+          email: email,
+        })
+        .then((response) => {
+          console.log(response.data);
+          const novosClientes = clientes.map((cliente) => {
+            if (cliente.id === clienteSelecionado.id) {
+              return { ...cliente, nome, cpf, senha, telefone, email };
+            } else {
+              return cliente;
+            }
+          });
+          setClientes(novosClientes);
+          setModalOpenCliente(false);
+          clienteSelecionadoNull();
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios
+        .post("http://localhost:3333/clientes", {
+          nome: nome,
+          cpf: cpf,
+          email: email,
+          telefone: telefone,
+        })
+        .then((response) => {
+          console.log("Resposta do servidor:", response.data);
+        })
+        .catch((error) => {
+          console.error("Erro ao enviar requisição:", error);
+        });
       setModalOpenCliente(false);
+      clienteSelecionadoNull();
+    }
   };
+
+  console.log("Cliente selecionado", clienteSelecionado);
 
   const onClose = (e) => {
     setModalOpenCliente(false);
+    clienteSelecionadoNull();
   };
+  const clienteSelecionadoNull = () => {
+    setClienteSelecionado(null);
+    setNomeCliente(null);
+    setCpf(null);
+    setSenha("");
+    setTelefone(null);
+    setEmail(null);
+  };
+
+  useEffect(() => {
+    if (clienteSelecionado) {
+      setNomeCliente(clienteSelecionado.nome);
+      setCpf(clienteSelecionado.cpf);
+      setSenha("");
+      setTelefone(clienteSelecionado.telefone);
+      setEmail(clienteSelecionado.email);
+    }
+  }, [clienteSelecionado]);
 
   return (
     <Modal
@@ -57,8 +115,9 @@ const FormNovoCliente = () => {
         }}
       >
         <Typography variant="h6" component="h2" alignItems="center">
-          Novo Cliente
+          Dados do Cliente
         </Typography>
+        <Box sx={{marginTop: "15px"}}>
         <form onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -68,7 +127,8 @@ const FormNovoCliente = () => {
                 id="nomeCliente"
                 label="Nome do Cliente"
                 variant="outlined"
-                value={nomeCliente}
+                value={nome}
+                InputLabelProps={{ shrink: true }} 
                 onChange={(event) => setNomeCliente(event.target.value)}
               />
             </Grid>
@@ -80,6 +140,7 @@ const FormNovoCliente = () => {
                 label="CPF"
                 variant="outlined"
                 value={cpf}
+                InputLabelProps={{ shrink: true }} 
                 onChange={(event) => setCpf(event.target.value)}
               />
             </Grid>
@@ -91,6 +152,7 @@ const FormNovoCliente = () => {
                 label="Email"
                 variant="outlined"
                 value={email}
+                InputLabelProps={{ shrink: true }} 
                 onChange={(event) => setEmail(event.target.value)}
               />
             </Grid>
@@ -102,6 +164,7 @@ const FormNovoCliente = () => {
                 label="Telefone"
                 variant="outlined"
                 value={telefone}
+                InputLabelProps={{ shrink: true }} 
                 onChange={(event) => setTelefone(event.target.value)}
               />
             </Grid>
@@ -118,6 +181,7 @@ const FormNovoCliente = () => {
             </Grid>
           </Grid>
         </form>
+        </Box>
       </Box>
     </Modal>
   );

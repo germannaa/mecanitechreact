@@ -18,7 +18,7 @@ import {
 import axios from "axios";
 
 export function BoxGreyCliente() {
-  const { modalOpen, setModalOpenCliente } = useContext(ComponentesContext);
+  const { modalOpen, clienteSelecionado, setModalOpenCliente, setClienteSelecionado } = useContext(ComponentesContext);
   const [clientes, setClientes] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -33,29 +33,20 @@ export function BoxGreyCliente() {
       .catch((error) => {
         console.log(error);
       });
-  }, [modalOpen]);
+  }, [modalOpen, clienteSelecionado]);
 
   const criarNovoCliente = () => {
     setModalOpenCliente(true);
+    setClienteSelecionado(null);
   };
 
-  const handleEdit = () => {};
-/*
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:3333/clientes/${id}`)
-      .then((response) => {
-        console.log(response.data);
-        // Atualiza a lista de clientes
-        setClientes(clientes.filter((cliente) => cliente.id !== id));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+  const handleEdit = (id) => {
+    const cliente = clientes.find((cliente) => cliente.id === id);
+    setClienteSelecionado(cliente);
+    setModalOpenCliente(true);
   };
   
-  */
-
+  
 
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir o cliente?")) {
@@ -72,7 +63,6 @@ export function BoxGreyCliente() {
     }
   };
   
-
 
   return (
     <Box
@@ -125,7 +115,7 @@ export function BoxGreyCliente() {
                       <IconButton
                         aria-label="editar"
                         size="small"
-                        onClick={() => handleEdit(cliente)}
+                        onClick={() => handleEdit(cliente.id)}
                       >
                         <Edit />
                       </IconButton>

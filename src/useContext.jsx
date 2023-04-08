@@ -6,15 +6,19 @@ export const ComponentesProvider = ({ children }) => {
   const [componenteAtivo, setComponenteAtivo] = useState("boxGrey");
 const [modalOpenCliente, setModalOpenCliente] = useState("");
 const [clientes, setClientes] = useState([]);
+const [ clienteSelecionado, setClienteSelecionado] = useState({});
+
 
 
   const value = {
     componenteAtivo, 
     modalOpenCliente, 
     clientes,
+    clienteSelecionado,
     setModalOpenCliente,
     setComponenteAtivo,
     setClientes,
+    setClienteSelecionado,
   };
 
   return (
