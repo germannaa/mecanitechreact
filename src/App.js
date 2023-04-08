@@ -1,24 +1,32 @@
-import logo from './logo.svg';
+import logotipo from './img/logotipo.jpg';
+import { ButtonCliente } from './BotaoCliente';
 import './App.css';
+import { BoxGrey } from './BoxGrey';
+import { ComponentesProvider } from './useContext';
 
 function App() {
+
+
   return (
+    <ComponentesProvider>
+
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <img src={logotipo} className="App-logo" alt="logo" />
       </header>
+      <div style={{ display: 'flex', flexDirection: 'row',  justifyContent: 'center', marginLeft:"10px", marginTop:"50px"}}>
+      <div style={{ marginLeft:"20px", width:"300px"}}>
+        <ButtonCliente />
+        </div>
+      <div style={{ display: 'flex', flexDirection: 'column',  alignItems: 'center', width: '100%' }}>
+   
+        <BoxGrey />
+     
+      </div>
     </div>
+    </div>
+    </ComponentesProvider>
+
   );
 }
 
