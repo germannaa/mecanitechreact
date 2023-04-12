@@ -1,10 +1,10 @@
 import { useContext } from "react";
 import { ComponentesContext } from "./useContext";
-import { BoxGreyInicio } from "./BoxGreyInicio";
-import { BoxGreyCliente } from './BoxGreyCliente';
-import { BoxGreyVeiculo } from './BoxGreyVeiculo';
-import { BoxGreyServico } from './BoxGreyServico';
-import { BoxGreyOrdemDeServico } from './BoxGreyOrdemDeServico';
+import { BoxGreyInicio } from "./Inicio/BoxGreyInicio";
+import { BoxGreyCliente } from './Clientes/BoxGreyCliente';
+import { BoxGreyVeiculo } from './Veiculos/BoxGreyVeiculo';
+import { BoxGreyServico } from './Servico/BoxGreyServico';
+import { BoxGreyOrdemDeServico } from './OrdemDeServico/BoxGreyOrdemDeServico';
 
 
 export function BoxGrey() {

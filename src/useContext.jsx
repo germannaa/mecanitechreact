@@ -8,6 +8,10 @@ const [modalOpenCliente, setModalOpenCliente] = useState("");
 const [clientes, setClientes] = useState([]);
 const [ clienteSelecionado, setClienteSelecionado] = useState({});
 
+const [modalOpenVeiculo, setModalOpenVeiculo] = useState("");
+const [veiculos, setVeiculos] = useState([]);
+const [ veiculoSelecionado, setVeiculoSelecionado] = useState({});
+
 
 
   const value = {
@@ -15,10 +19,16 @@ const [ clienteSelecionado, setClienteSelecionado] = useState({});
     modalOpenCliente, 
     clientes,
     clienteSelecionado,
+    modalOpenVeiculo, 
+    veiculos,
+    veiculoSelecionado,
     setModalOpenCliente,
     setComponenteAtivo,
     setClientes,
     setClienteSelecionado,
+    setModalOpenVeiculo,
+    setVeiculos,
+    setVeiculoSelecionado,
   };
 
   return (

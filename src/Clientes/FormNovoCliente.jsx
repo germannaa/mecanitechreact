@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Box, Typography, TextField, Grid, Button } from "@mui/material";
 import axios from "axios";
 import { useContext } from "react";
-import { ComponentesContext } from "./useContext";
+import { ComponentesContext } from "../useContext";
 import { useEffect } from "react";
 
 const FormNovoCliente = () => {

@@ -2,8 +2,7 @@ import { Button, IconButton } from "@mui/material";
 import { Box } from "@mui/material";
 import { useContext } from "react";
 import { Edit, Delete } from "@mui/icons-material";
-import { ComponentesContext } from "./useContext";
-import FormNovoCliente from "./FormNovoCliente";
+import { ComponentesContext } from "../useContext";
 import { useState, useEffect } from "react";
 
 import {
@@ -16,53 +15,57 @@ import {
   TablePagination,
 } from "@mui/material";
 import axios from "axios";
+import FormNovoVeiculo from "./FormNovoVeiculo";
 
-export function BoxGreyCliente() {
-  const { modalOpen, clienteSelecionado, setModalOpenCliente, setClienteSelecionado } = useContext(ComponentesContext);
-  const [clientes, setClientes] = useState([]);
+
+export function BoxGreyVeiculo() {
+
+  const { modalOpen, veiculoSelecionado, modalOpenVeiculo, veiculos, setModalOpenVeiculo, setVeiculoSelecionado, setVeiculos } = useContext(ComponentesContext);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3333/clientes")
+      .get("http://localhost:3333/veiculos")
       .then((response) => {
-        setClientes(response.data);
+        setVeiculos(response.data);
         console.log(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }, [modalOpen, clienteSelecionado]);
+  }, [modalOpenVeiculo, modalOpen, veiculoSelecionado]);
 
-  const criarNovoCliente = () => {
-    setModalOpenCliente(true);
-    setClienteSelecionado(null);
-  };
 
-  const handleEdit = (id) => {
-    const cliente = clientes.find((cliente) => cliente.id === id);
-    setClienteSelecionado(cliente);
-    setModalOpenCliente(true);
-  };
-  
-  
 
-  const handleDelete = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir o cliente?")) {
+const criarNovoVeiculo = () =>{
+  console.log("CRIAR NOVO VEICULO")
+  setModalOpenVeiculo(true);
+  setVeiculoSelecionado(null);
+}
+
+const handleEditVeiculo = (placa) => {
+  console.log("EDITAR VEICULO")
+  const veiculo = veiculos.find((veiculo) => veiculo.placa === placa)
+  setVeiculoSelecionado(veiculo);
+  setModalOpenVeiculo(true);
+}
+
+const handleDeleteVeiculo = (placa) => {
+  console.log("DELETAR VEICULO")
+    if (window.confirm("Tem certeza que deseja excluir o veículo?")) {
       axios
-        .delete(`http://localhost:3333/clientes/${id}`)
+        .delete(`http://localhost:3333/veiculos/${placa}`)
         .then((response) => {
           console.log(response.data);
-          // Atualiza a lista de clientes
-          setClientes(clientes.filter((cliente) => cliente.id !== id));
+          // Atualiza a lista de veiculos
+          setVeiculos(veiculos.filter((veiculo) => veiculo.placa !== placa));
         })
         .catch((error) => {
           console.log(error);
         });
-    }
   };
-  
+}
 
   return (
     <Box
@@ -86,11 +89,11 @@ export function BoxGreyCliente() {
           color="warning"
           size="small"
           sx={{ margin: "10px", marginLeft: "auto" }}
-          onClick={criarNovoCliente}
+          onClick={criarNovoVeiculo}
         >
-          Novo Cliente
+          Novo Veiculo
         </Button>
-        <FormNovoCliente />
+        <FormNovoVeiculo />
       </Box>
 
       <div>
@@ -98,37 +101,40 @@ export function BoxGreyCliente() {
           <Table style={{ width: 700 }}>
             <TableHead>
               <TableRow>
-                <TableCell width={40}>ID</TableCell>
+                <TableCell width={40}>Placa</TableCell>
                 <TableCell width={100}>Ações</TableCell>
                 <TableCell width={200}>Nome Cliente</TableCell>
-                <TableCell>Telefone</TableCell>
+                <TableCell>Marca</TableCell>
+                <TableCell>Modelo</TableCell>
+
               </TableRow>
             </TableHead>
             <TableBody>
-              {clientes
+              {veiculos
                 .sort((a, b) => b.id - a.id)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((cliente) => (
-                  <TableRow key={cliente.id}>
-                    <TableCell>{cliente.id}</TableCell>
+                .map((veiculo) => (
+                  <TableRow key={veiculo.placa}>
+                    <TableCell>{veiculo.placa}</TableCell>
                     <TableCell>
                       <IconButton
                         aria-label="editar"
                         size="small"
-                        onClick={() => handleEdit(cliente.id)}
+                        onClick={() => handleEditVeiculo(veiculo.placa)}
                       >
                         <Edit />
                       </IconButton>
                       <IconButton
                         aria-label="deletar"
                         size="small"
-                        onClick={() => handleDelete(cliente.id)}
+                        onClick={() => handleDeleteVeiculo(veiculo.placa)}
                       >
                         <Delete />
                       </IconButton>
                     </TableCell>
-                    <TableCell>{cliente.nome}</TableCell>
-                    <TableCell>{cliente.telefone}</TableCell>
+                    <TableCell>{veiculo.nome_cliente}</TableCell>
+                    <TableCell>{veiculo.marca}</TableCell>
+                    <TableCell>{veiculo.modelo}</TableCell>
                   </TableRow>
                 ))}
               .
@@ -136,7 +142,7 @@ export function BoxGreyCliente() {
           </Table>
           <TablePagination
             component="div"
-            count={clientes.length}
+            count={veiculos.length}
             page={page}
             onPageChange={(e, newPage) => setPage(newPage)}
             rowsPerPage={rowsPerPage}
@@ -151,3 +157,5 @@ export function BoxGreyCliente() {
     </Box>
   );
 }
+
+

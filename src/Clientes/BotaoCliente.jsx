@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 import { useContext } from "react";
-import { ComponentesContext } from "./useContext";
+import { ComponentesContext } from "../useContext";
 
 
 export function ButtonCliente() {

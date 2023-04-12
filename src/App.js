@@ -1,5 +1,5 @@
 import logotipo from './img/logotipo.jpg';
-import { ButtonCliente } from './BotaoCliente';
+import { ButtonCliente } from './Clientes/BotaoCliente';
 import './App.css';
 import { BoxGrey } from './BoxGrey';
 import { ComponentesProvider } from './useContext';
