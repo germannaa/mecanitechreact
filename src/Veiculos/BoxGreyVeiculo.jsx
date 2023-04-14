@@ -17,7 +17,6 @@ import {
 import axios from "axios";
 import FormNovoVeiculo from "./FormNovoVeiculo";
 
-
 export function BoxGreyVeiculo() {
 
   const { modalOpen, veiculoSelecionado, modalOpenVeiculo, veiculos, setModalOpenVeiculo, setVeiculoSelecionado, setVeiculos } = useContext(ComponentesContext);
@@ -34,9 +33,9 @@ export function BoxGreyVeiculo() {
       .catch((error) => {
         console.log(error);
       });
-  }, [modalOpenVeiculo, modalOpen, veiculoSelecionado]);
+  }, [modalOpenVeiculo, modalOpen, veiculoSelecionado, setVeiculos]);
 
-
+  
 
 const criarNovoVeiculo = () =>{
   console.log("CRIAR NOVO VEICULO")
@@ -151,6 +150,7 @@ const handleDeleteVeiculo = (placa) => {
               setPage(0);
             }}
             rowsPerPageOptions={[5, 10, 25, 50]}
+            labelRowsPerPage="Linhas por página"
           />
         </TableContainer>
       </div>
