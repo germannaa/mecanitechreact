@@ -4,22 +4,21 @@ export const ComponentesContext = createContext();
 
 export const ComponentesProvider = ({ children }) => {
   const [componenteAtivo, setComponenteAtivo] = useState("boxGrey");
-const [modalOpenCliente, setModalOpenCliente] = useState("");
-const [clientes, setClientes] = useState([]);
-const [ clienteSelecionado, setClienteSelecionado] = useState({});
+  
+  const [modalOpenCliente, setModalOpenCliente] = useState("");
+  const [clientes, setClientes] = useState([]);
+  const [clienteSelecionado, setClienteSelecionado] = useState({});
 
-const [modalOpenVeiculo, setModalOpenVeiculo] = useState("");
-const [veiculos, setVeiculos] = useState([]);
-const [ veiculoSelecionado, setVeiculoSelecionado] = useState({});
-
-
+  const [modalOpenVeiculo, setModalOpenVeiculo] = useState("");
+  const [veiculos, setVeiculos] = useState([]);
+  const [veiculoSelecionado, setVeiculoSelecionado] = useState({});
 
   const value = {
-    componenteAtivo, 
-    modalOpenCliente, 
+    componenteAtivo,
+    modalOpenCliente,
     clientes,
     clienteSelecionado,
-    modalOpenVeiculo, 
+    modalOpenVeiculo,
     veiculos,
     veiculoSelecionado,
     setModalOpenCliente,

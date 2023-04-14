@@ -1,11 +1,10 @@
 import logotipo from './img/logotipo.jpg';
-import { ButtonCliente } from './Clientes/BotaoCliente';
+import { BarraLateral } from './BarraLateral';
 import './App.css';
 import { BoxGrey } from './BoxGrey';
 import { ComponentesProvider } from './useContext';
 
 function App() {
-
 
   return (
     <ComponentesProvider>
@@ -16,7 +15,7 @@ function App() {
       </header>
       <div style={{ display: 'flex', flexDirection: 'row',  justifyContent: 'center', marginLeft:"10px", marginTop:"50px"}}>
       <div style={{ marginLeft:"20px", width:"300px"}}>
-        <ButtonCliente />
+        <BarraLateral />
         </div>
       <div style={{ display: 'flex', flexDirection: 'column',  alignItems: 'center', width: '100%' }}>
    

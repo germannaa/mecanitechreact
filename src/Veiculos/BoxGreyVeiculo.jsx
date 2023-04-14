@@ -1,7 +1,7 @@
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, AddCircle } from "@mui/icons-material";
 import { ComponentesContext } from "../useContext";
 import { useState, useEffect } from "react";
 
@@ -77,21 +77,21 @@ const handleDeleteVeiculo = (placa) => {
         height: "60vh",
       }}
     >
-      <Box
+       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          sx={{ margin: "10px", marginLeft: "auto" }}
+          justifyContent: "space-between",          
+        }}>
+          <Typography sx={{ fontWeight: "bold", textAlign:"center", marginLeft: "20rem", marginTop:"1rem",fontSize: 20}}> Veículos </Typography>
+          <Button
+            variant="contained"
+            color="warning"
+            size="small"
+            startIcon = {< AddCircle />}
+            sx={{ margin: "10px", marginLeft: "auto" }}
           onClick={criarNovoVeiculo}
         >
-          Novo Veiculo
+          Novo 
         </Button>
         <FormNovoVeiculo />
       </Box>

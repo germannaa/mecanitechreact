@@ -1,7 +1,7 @@
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { Box } from "@mui/material";
 import { useContext } from "react";
-import { Edit, Delete } from "@mui/icons-material";
+import { Edit, Delete, AddCircle } from "@mui/icons-material";
 import { ComponentesContext } from "../useContext";
 import FormNovoCliente from "./FormNovoCliente";
 import { useState, useEffect } from "react";
@@ -18,7 +18,13 @@ import {
 import axios from "axios";
 
 export function BoxGreyCliente() {
-  const { modalOpen, clienteSelecionado, modalOpenCliente, setModalOpenCliente, setClienteSelecionado } = useContext(ComponentesContext);
+  const {
+    modalOpen,
+    clienteSelecionado,
+    modalOpenCliente,
+    setModalOpenCliente,
+    setClienteSelecionado,
+  } = useContext(ComponentesContext);
   const [clientes, setClientes] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -45,8 +51,6 @@ export function BoxGreyCliente() {
     setClienteSelecionado(cliente);
     setModalOpenCliente(true);
   };
-  
-  
 
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir o cliente?")) {
@@ -62,7 +66,6 @@ export function BoxGreyCliente() {
         });
     }
   };
-  
 
   return (
     <Box
@@ -77,20 +80,18 @@ export function BoxGreyCliente() {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Button
-          variant="contained"
-          color="warning"
-          size="small"
-          sx={{ margin: "10px", marginLeft: "auto" }}
-          onClick={criarNovoCliente}
-        >
-          Novo Cliente
-        </Button>
-        <FormNovoCliente />
+          justifyContent: "space-between",          
+        }}>
+          <Typography sx={{ fontWeight: "bold", textAlign:"center", marginLeft: "20rem", marginTop:"1rem",fontSize: 20}}> Clientes </Typography>
+          <Button
+            variant="contained"
+            color="warning"
+            size="small"
+            sx={{ margin: "10px", marginLeft: "auto" }}
+            startIcon = {< AddCircle />}
+            onClick={criarNovoCliente}
+          > Novo</Button>
+          <FormNovoCliente />
       </Box>
 
       <div>
@@ -145,6 +146,7 @@ export function BoxGreyCliente() {
               setPage(0);
             }}
             rowsPerPageOptions={[5, 10, 25, 50]}
+            labelRowsPerPage="Linhas por página"
           />
         </TableContainer>
       </div>
