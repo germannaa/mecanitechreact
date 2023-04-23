@@ -4,7 +4,7 @@ export const ComponentesContext = createContext();
 
 export const ComponentesProvider = ({ children }) => {
   const [componenteAtivo, setComponenteAtivo] = useState("boxGrey");
-  
+
   const [modalOpenCliente, setModalOpenCliente] = useState("");
   const [clientes, setClientes] = useState([]);
   const [clienteSelecionado, setClienteSelecionado] = useState({});
@@ -21,6 +21,10 @@ export const ComponentesProvider = ({ children }) => {
   const [funcionarios, setFuncionarios] = useState([]);
   const [funcionarioSelecionado, setFuncionarioSelecionado] = useState({});
 
+  const [modalOpenOS, setModalOpenOS] = useState("");
+  const [OS, setOS] = useState([]);
+  const [OSSelecionado, setOSSelecionado] = useState({});
+
   const value = {
     componenteAtivo,
     modalOpenCliente,
@@ -35,6 +39,10 @@ export const ComponentesProvider = ({ children }) => {
     modalOpenFuncionario,
     funcionarios,
     funcionarioSelecionado,
+    modalOpenOS,
+    OS,
+    OSSelecionado,
+
     setModalOpenCliente,
     setComponenteAtivo,
     setClientes,
@@ -48,6 +56,9 @@ export const ComponentesProvider = ({ children }) => {
     setModalOpenFuncionario,
     setFuncionarios,
     setFuncionarioSelecionado,
+    setModalOpenOS,
+    setOS,
+    setOSSelecionado,
   };
 
   return (

@@ -111,7 +111,6 @@ export function BoxGreyServico() {
           onClick={criarNovoServico}
           sx={{ margin: "10px", marginLeft: "auto" }}
         >
-          {" "}
           Novo
         </Button>
         <FormNovoServico />

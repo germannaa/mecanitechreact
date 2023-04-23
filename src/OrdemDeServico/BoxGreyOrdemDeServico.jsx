@@ -2,8 +2,27 @@ import { Button, IconButton, Typography } from "@mui/material";
 import { Edit, Delete, AddCircle } from "@mui/icons-material";
 import { Box } from "@mui/material";
 import { useContext } from "react";
+import { ComponentesContext } from "../useContext";
+
+import FormNovoOS from "./FormNovoOS";
 
 export function BoxGreyOrdemDeServico() {
+
+  const {
+    modalOpen,
+    OSSelecionado,
+    modalOpenOS,
+    OS,
+    setModalOpenOS,
+    setOSSelecionado,
+    setOS,
+  } = useContext(ComponentesContext);
+
+  const criarNovoOS = () => {
+    setModalOpenOS(true);
+    setOSSelecionado(null);
+  };
+
     return (
       <Box
       sx={{
@@ -25,8 +44,10 @@ export function BoxGreyOrdemDeServico() {
             color="warning"
             size="small"
             startIcon = {< AddCircle />}
+            onClick={criarNovoOS}
             sx={{ margin: "10px", marginLeft: "auto" }}
           > Novo</Button>
+          < FormNovoOS />
       </Box>
       </Box>
   
