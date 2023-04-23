@@ -5,6 +5,7 @@ import { BoxGreyCliente } from './Clientes/BoxGreyCliente';
 import { BoxGreyVeiculo } from './Veiculos/BoxGreyVeiculo';
 import { BoxGreyServico } from './Servico/BoxGreyServico';
 import { BoxGreyOrdemDeServico } from './OrdemDeServico/BoxGreyOrdemDeServico';
+import { BoxGreyFuncionario } from "./Funcionarios/BoxGreyFuncionario";
 
 
 export function BoxGrey() {
@@ -30,6 +31,12 @@ if (componenteAtivo === "buttonVeiculo"){
 if (componenteAtivo === "buttonServico"){
     return (
        < BoxGreyServico />
+    );
+}
+
+if (componenteAtivo === "buttonFuncionario"){
+    return (
+        <BoxGreyFuncionario />
     );
 }
 

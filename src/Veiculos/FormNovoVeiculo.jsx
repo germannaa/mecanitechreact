@@ -208,7 +208,7 @@ const FormNovoVeiculo = () => {
             </Grid>
             <Grid item xs={4}>
               <Button variant="contained" color="primary" type="submit">
-                Confirmar
+                Salvar
               </Button>
             </Grid>
           </Grid>

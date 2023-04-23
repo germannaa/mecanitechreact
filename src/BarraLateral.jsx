@@ -23,6 +23,10 @@ export function BarraLateral () {
         setComponenteAtivo("buttonServico");
         console.log("buttonservico")
     }
+    const openBoxFuncionario = () => {
+      setComponenteAtivo("buttonFuncionario");
+      console.log("buttonfuncionario")
+  }
     const openBoxOrdemDeServico = () => {
         setComponenteAtivo("buttonOrdemDeServico");
         console.log("buttonordemdeServico")
@@ -32,16 +36,19 @@ export function BarraLateral () {
   return (
     <div style={{display:"flex", flexDirection:"column", alignSelf:"flex-start", maxWidth:"300px"}}>
         <Button variant="contained" color={componenteAtivo === "boxGrey"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxInicio}>
-        Inicio
+        Início
       </Button>
       <Button variant="contained" color={ componenteAtivo === "buttonCliente"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxCliente} >
         Cliente
       </Button>
       <Button variant="contained" color={ componenteAtivo === "buttonVeiculo"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxVeiculo} >
-        Veiculo
+        Veículo
       </Button>
       <Button variant="contained" color={ componenteAtivo === "buttonServico"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxServico} >
         Serviço
+      </Button>
+      <Button variant="contained" color={ componenteAtivo === "buttonFuncionario"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxFuncionario} >
+        Funcionário
       </Button>
       <Button variant="contained" color={ componenteAtivo === "buttonOrdemDeServico"? "inherit" : "warning"} size="large" sx={{margin:"10px"}} onClick={openBoxOrdemDeServico} >
         Ordem de Serviço

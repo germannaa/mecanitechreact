@@ -13,10 +13,13 @@ export const ComponentesProvider = ({ children }) => {
   const [veiculos, setVeiculos] = useState([]);
   const [veiculoSelecionado, setVeiculoSelecionado] = useState({});
 
-
   const [modalOpenServico, setModalOpenServico] = useState("");
   const [servicos, setServicos] = useState([]);
   const [servicoSelecionado, setServicoSelecionado] = useState({});
+
+  const [modalOpenFuncionario, setModalOpenFuncionario] = useState("");
+  const [funcionarios, setFuncionarios] = useState([]);
+  const [funcionarioSelecionado, setFuncionarioSelecionado] = useState({});
 
   const value = {
     componenteAtivo,
@@ -29,6 +32,9 @@ export const ComponentesProvider = ({ children }) => {
     modalOpenServico,
     servicos,
     servicoSelecionado,
+    modalOpenFuncionario,
+    funcionarios,
+    funcionarioSelecionado,
     setModalOpenCliente,
     setComponenteAtivo,
     setClientes,
@@ -38,7 +44,10 @@ export const ComponentesProvider = ({ children }) => {
     setVeiculoSelecionado,
     setModalOpenServico,
     setServicos,
-    setServicoSelecionado
+    setServicoSelecionado,
+    setModalOpenFuncionario,
+    setFuncionarios,
+    setFuncionarioSelecionado,
   };
 
   return (
