@@ -10,6 +10,8 @@ import { Autocomplete } from "@mui/lab";
 const FormNovoOS = () => {
   const [cpf_cliente, setCpfCliente] = useState("");
   const [placa_veiculo, setPlacaVeiculo] = useState("");
+  const [placa_veiculos, setPlacaVeiculos] = useState([]);
+
   const [id_funcionario, setIdFuncionario] = useState("");
   const [data_inicio, setDataInicio] = useState("");
   const [data_termino, setDataTermino] = useState("");
@@ -19,7 +21,9 @@ const FormNovoOS = () => {
   const [funcionarios, setFuncionarios] = useState([]);
   const [servicosSelecionados, setServicosSelecionados] = useState([]);
   const [listaServicos, setListaServicos] = useState([]);
+  //let listaServicos = [];
   let nomesServicos = [];
+  let idServicos = [];
 
 
   const {
@@ -160,6 +164,15 @@ const FormNovoOS = () => {
     return nomesServicos.slice(0, -2); // Remove a vírgula e o espaço no final
   };
 
+  const buscarPlacas = (cpf_cliente) => {
+    fetch(`http://localhost:3333/veiculos/${cpf_cliente}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPlacaVeiculos(data);
+      })
+      .catch((error) => console.log(error));
+  };
+
   const calcularValorTotal = () => {
     let total = 0;
     servicosSelecionados.forEach((servico) => {
@@ -231,17 +244,26 @@ const FormNovoOS = () => {
               </Grid>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="placaVeiculo"
-                  label="Placa do Veículo"
-                  variant="outlined"
-                  value={placa_veiculo}
-                  InputLabelProps={{ shrink: true }}
+                <InputLabel id="select-veiculo-label">Veículo</InputLabel>
+                <Select
+                  id="id_veiculo"
+                  value={placa_veiculo || ""}
+                  label="Selecione um veículo"
                   onChange={(event) => setPlacaVeiculo(event.target.value)}
-                />
+                  fullWidth
+                  required
+                >
+                  <MenuItem value="">
+                    <em>Selecione um veículo</em>
+                  </MenuItem>
+                  {placa_veiculos.map((placa) => (
+                    <MenuItem key={placa} value={placa}>
+                      {placa}
+                    </MenuItem>
+                  ))}
+                </Select>
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -252,6 +274,7 @@ const FormNovoOS = () => {
                   value={cpf_cliente}
                   InputLabelProps={{ shrink: true }}
                   onChange={(event) => setCpfCliente(event.target.value)}
+                  onBlur={()=> buscarPlacas(cpf_cliente)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
