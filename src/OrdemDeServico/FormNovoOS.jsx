@@ -6,6 +6,7 @@ import { ComponentesContext } from "../useContext";
 import { RadioGroup, Radio, FormControlLabel } from "@mui/material";
 import { Select, InputLabel, MenuItem } from "@mui/material";
 import { Autocomplete } from "@mui/lab";
+import { getDate, isToday } from "date-fns";
 
 const FormNovoOS = () => {
   const [cpf_cliente, setCpfCliente] = useState("");
@@ -24,7 +25,7 @@ const FormNovoOS = () => {
   //let listaServicos = [];
   let nomesServicos = [];
   let idServicos = [];
-
+  const [idServicosOS, setIdServicosOs] = useState([]);
 
   const {
     modalOpenOS,
@@ -34,7 +35,7 @@ const FormNovoOS = () => {
     setOSSelecionado,
     setOS,
   } = useContext(ComponentesContext);
-
+  /*
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -98,11 +99,90 @@ const FormNovoOS = () => {
       OSSelecionadoNull();
     }
   };
+  */
+  const [idsServicos, setIdsServicos] = useState([]);
+
+  const getIdsServicosSelecionados = () => {
+    const ids = [];
+    servicosSelecionados.forEach((servico) => {
+      ids.push(servico.id_servico);
+    });
+    setIdsServicos(ids);
+  };
+
+  useEffect(() => {
+    getIdsServicosSelecionados();
+  }, [servicosSelecionados]);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (OSSelecionado) {
+      axios
+        .put(`http://localhost:3333/ordensdeservico/${OSSelecionado.id_os}`, {
+          cpf_cliente,
+          placa_veiculo,
+          id_funcionario,
+          data_inicio,
+          data_termino,
+          valor_total,
+          status,
+          servicos: [],
+        })
+        .then((response) => {
+          console.log(response.data);
+          const novaOS = OS.map((os) => {
+            if (os.id_os === OSSelecionado.id_os) {
+              return {
+                ...os,
+                cpf_cliente,
+                placa_veiculo,
+                id_funcionario,
+                data_inicio,
+                data_termino,
+                valor_total,
+                status,
+                servicos,
+              };
+            } else {
+              return os;
+            }
+          });
+          setOS(novaOS);
+          setModalOpenOS(false);
+          OSSelecionadoNull();
+          alert("Ordem de serviço atualizada com sucesso!");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    } else {
+      axios
+        .post("http://localhost:3333/ordensdeservico", {
+          cpf_cliente,
+          placa_veiculo,
+          id_funcionario,
+          data_inicio,
+          data_termino,
+          valor_total,
+          status,
+          idServicos,
+        })
+        .then((response) => {
+          console.log("Resposta do servidor:", response.data);
+          alert("Ordem de serviço criada com sucesso!");
+        })
+        .catch((error) => {
+          console.error("Erro ao enviar requisição:", error);
+        });
+      setModalOpenOS(false);
+      OSSelecionadoNull();
+    }
+  };
 
   const onClose = (e) => {
     setModalOpenOS(false);
-    console.log("OS", OSSelecionado);
-
+    //console.log("OS", OSSelecionado);
     OSSelecionadoNull();
   };
   const OSSelecionadoNull = () => {
@@ -112,27 +192,18 @@ const FormNovoOS = () => {
     setIdFuncionario(null);
     setDataInicio(null);
     setDataTermino(null);
-    setValorTotal(null);
+    setValorTotal(0);
     setStatus(null);
-    setServicos(null);
+    setServicos([]);
+    setServicosSelecionados([]);
   };
 
   const handleChange = (event) => {
     setStatus(event.target.value);
+   // console.log("status: " + event.target.value);
   };
 
-  useEffect(() => {
-    if (OSSelecionado) {
-      setCpfCliente(OSSelecionado.cpf_cliente);
-      setPlacaVeiculo(OSSelecionado.placa_veiculo);
-      setIdFuncionario(OSSelecionado.id_funcionario);
-      setDataInicio(OSSelecionado.data_inicio);
-      setDataTermino(OSSelecionado.data_termino);
-      setValorTotal(OSSelecionado.valor_total);
-      setStatus(OSSelecionado.status);
-      setServicos(OSSelecionado.servicos);
-    }
-  }, [OSSelecionado]);
+  
 
   useEffect(() => {
     fetch("http://localhost:3333/funcionarios")
@@ -155,23 +226,34 @@ const FormNovoOS = () => {
 
   const handleServicosSelecionadosChange = (event, values) => {
     setServicosSelecionados(values);
-    console.log("change servicosSelecionados", servicosSelecionados);
   };
+
   const getNomesServicosSelecionados = () => {
-    servicosSelecionados.forEach((servico) => {
-      nomesServicos += servico.nome_servico + ", ";
-    });
-    return nomesServicos.slice(0, -2); // Remove a vírgula e o espaço no final
+    idServicos = servicosSelecionados
+      .map((servico) => servico.id_servico)
+      .join(", ");
+    const nomesServicos = servicosSelecionados
+      .map((servico) => servico.nome_servico)
+      .join(", ");
+    return nomesServicos.slice(0); // Remove a vírgula e o espaço no final
   };
 
   const buscarPlacas = (cpf_cliente) => {
     fetch(`http://localhost:3333/veiculos/${cpf_cliente}`)
       .then((res) => res.json())
       .then((data) => {
-        setPlacaVeiculos(data);
+        if (data.length > 0) {
+          setPlacaVeiculos(data);
+        } else {
+          window.alert("Cliente selecionado não possui veículos cadastrados. Favor cadastrar.");
+        }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        window.alert("Ocorreu um erro ao buscar os veículos. Por favor, tente novamente.");
+      });
   };
+  
 
   const calcularValorTotal = () => {
     let total = 0;
@@ -184,6 +266,34 @@ const FormNovoOS = () => {
   useEffect(() => {
     calcularValorTotal();
   }, [servicosSelecionados]);
+
+  useEffect(() => {
+    if (OSSelecionado) {
+      setCpfCliente(OSSelecionado.cpf_cliente);
+      setPlacaVeiculo(OSSelecionado.placa_veiculo);
+      setIdFuncionario(OSSelecionado.id_funcionario);
+      setDataInicio(OSSelecionado.data_inicio);
+      setDataTermino(OSSelecionado.data_termino);
+      setValorTotal(OSSelecionado.valor_total);
+      setStatus(OSSelecionado.status);
+      setServicos(OSSelecionado.servicos);
+    }
+  }, [OSSelecionado]);
+
+  /*
+  console.log(
+    "OS",
+    cpf_cliente,
+    placa_veiculo,
+    id_funcionario,
+    data_inicio,
+    data_termino,
+    valor_total,
+    status,
+    idServicos
+  );
+
+  */
 
   return (
     <Modal
@@ -203,46 +313,69 @@ const FormNovoOS = () => {
           boxShadow: 24,
           padding: "20px",
           borderRadius: "8px",
-          width: "600px",
+          width: "800px",
+          height: "600px",
           maxWidth: "90%",
           outline: "none",
         }}
       >
-        <Typography variant="h6" component="h2" alignItems="center">
-          Dados do Serviço
-        </Typography>
-        <Box sx={{ marginTop: "15px" }}>
+        <Grid container spacing={2} sx={{ marginTop: "10px" }}>
+          <Grid item xs={12} sm={8}>
+            <Typography variant="h6" component="h2" alignItems="center">
+              Dados do Serviço
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <Typography variant="h6" component="h2" alignItems="center">
+              Valor total: R$ {valor_total}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Box sx={{ marginTop: "20px" }}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <RadioGroup
                   row
                   aria-label="status"
                   value={status}
+                  defaultValue="Pendente"
                   onChange={handleChange}
                 >
                   <FormControlLabel
-                    value="pendente"
+                    value="Pendente"
                     control={<Radio />}
                     label="Pendente"
                   />
                   <FormControlLabel
-                    value="em andamento"
+                    value="Em andamento"
                     control={<Radio />}
                     label="Em andamento"
                   />
                   <FormControlLabel
-                    value="concluido"
+                    value="Concluido"
                     control={<Radio />}
                     label="Concluído"
                   />
                 </RadioGroup>
               </Grid>
-              <Grid item xs={12} sm={6}>
+
               <Grid item xs={12}>
-                <label>Valor total: R${valor_total.toFixed(2)}</label>
+                <TextField
+                  required
+                  fullWidth
+                  id="cpfCliente"
+                  label="CPF do Cliente"
+                  variant="outlined"
+                  value={cpf_cliente}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(event) => setCpfCliente(event.target.value)}
+                  onBlur={() => buscarPlacas(cpf_cliente)}
+                />
               </Grid>
-              </Grid>
+
               <Grid item xs={12} sm={6}>
                 <InputLabel id="select-veiculo-label">Veículo</InputLabel>
                 <Select
@@ -262,47 +395,6 @@ const FormNovoOS = () => {
                     </MenuItem>
                   ))}
                 </Select>
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="cpfCliente"
-                  label="CPF do Cliente"
-                  variant="outlined"
-                  value={cpf_cliente}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(event) => setCpfCliente(event.target.value)}
-                  onBlur={()=> buscarPlacas(cpf_cliente)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="data_inicio"
-                  label="Data Inicio"
-                  type="date"
-                  variant="outlined"
-                  value={data_inicio}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(event) => setDataInicio(event.target.value)}
-                />
-              </Grid>
-
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="data_termino"
-                  label="Data Termino"
-                  type="date"
-                  variant="outlined"
-                  value={data_termino}
-                  InputLabelProps={{ shrink: true }}
-                  onChange={(event) => setDataTermino(event.target.value)}
-                />
               </Grid>
 
               <Grid item xs={12} sm={6}>
@@ -329,6 +421,34 @@ const FormNovoOS = () => {
                   ))}
                 </Select>
               </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="data_inicio"
+                  label="Data Inicio"
+                  type="date"
+                  variant="outlined"
+                  defaultValue={isToday}
+                  value={data_inicio}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(event) => setDataInicio(event.target.value)}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  fullWidth
+                  id="data_termino"
+                  label="Data Termino/ Prevista "
+                  type="date"
+                  variant="outlined"
+                  value={data_termino}
+                  InputLabelProps={{ shrink: true }}
+                  onChange={(event) => setDataTermino(event.target.value)}
+                />
+              </Grid>
+
               <Grid item xs={12}></Grid>
 
               <Grid item xs={12}>
@@ -341,7 +461,7 @@ const FormNovoOS = () => {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="Serviços"
+                      label="Serviços Disponíveis"
                       variant="outlined"
                       placeholder="Selecione os serviços"
                     />
@@ -350,9 +470,11 @@ const FormNovoOS = () => {
               </Grid>
 
               <Grid item xs={12}>
-                <label>
-                  Serviços selecionados: {getNomesServicosSelecionados()}
-                </label>
+                <Box sx={{ height: "70px" }}>
+                  <label>
+                    Serviços selecionados: {getNomesServicosSelecionados()}
+                  </label>
+                </Box>
               </Grid>
 
               <Grid item xs={2} />

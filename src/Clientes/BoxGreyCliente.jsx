@@ -52,6 +52,7 @@ export function BoxGreyCliente() {
     setModalOpenCliente(true);
   };
 
+
   const handleDelete = (id) => {
     if (window.confirm("Tem certeza que deseja excluir o cliente?")) {
       axios
@@ -62,6 +63,7 @@ export function BoxGreyCliente() {
           setClientes(clientes.filter((cliente) => cliente.id !== id));
         })
         .catch((error) => {
+          window.confirm("Não foi possivel excluir o cliente. Verifique se tem servicos ou veiculos asssociados.")
           console.log(error);
         });
     }
